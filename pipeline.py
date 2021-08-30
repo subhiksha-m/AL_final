@@ -442,7 +442,7 @@ class Pipeline:
 
         tmp = list(paths.list_images(parameters["data"]["data_path"]))
         self.unlabeled_list = [i.split("/")[-1] for i in tmp]
-        self.dataset_paths = self.unlabeled_list
+        self.dataset_paths = [i.split("/")[-1] for i in tmp]
 
         logging.info("initialize_embeddings")
         self.initialize_embeddings(
