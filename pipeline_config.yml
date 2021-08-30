@@ -40,7 +40,7 @@ TrainModels:
   config_path:      /content/AL_final/ActiveLabeler-main/ActiveLabelerModels/model_config.yaml
 
 ActiveLabeler:
-  sample_size:      120
+  sample_size:      20
   sampling_strategy: "gaussian" #"uncertainty_balanced" # "random" #"uncertainty"
   batch_size: 128
 
