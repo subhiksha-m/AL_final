@@ -56,9 +56,13 @@ import matplotlib.image as mpimg
 from imutils import paths
 import sys
 from tsne import TSNE_visualiser
+from pyngrok import ngrok
 
 import logging
 logging.info("APP START")
+
+swipe_url = ngrok.connect(5000)
+print("\n access swipe labeler at: ", swipe_url)
 
 
 sys.path.insert(0, "Self-Supervised-Learner")
@@ -198,13 +202,13 @@ class Pipeline:
         for image_path in ref_imgs:
             inds, dists = self.get_nn_annoy(
                 image_path,
-                image_path,
                 n_closest,
                 model,
                 embs[i]
             )
             i+=1
-            image_names.add(self.dataset_paths[idx] for idx in inds)
+            for idx in inds:
+                image_names.add(self.dataset_paths[idx])
         return list(image_names)
 
     def label_data(
@@ -238,7 +242,6 @@ class Pipeline:
 
     def swipe_label(self):
 
-        swipe_url= self.parameters["nn"]["swipe_url"]
         unlabled_path = self.parameters["nn"]["unlabled_path"]
         labeled_path =  self.parameters["nn"]["labeled_path"]
         positive_path = self.parameters["nn"]["positive_path"]
@@ -269,7 +272,7 @@ class Pipeline:
         else:
             batch_size = min(len(list(paths.list_images(unlabled_path))),self.parameters['nn']['swipelabel_batch_size'])
             #tic = time.perf_counter()
-            label = f"python3 Swipe-Labeler-main/api/api.py --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog"
+            label = f"python3 AL_final/Swipe-Labeler-main/api/api.py --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog"
             #todo swipelog
             # >/dev/null 2>&1"
             logging.debug(label)
@@ -317,14 +320,14 @@ class Pipeline:
             n_20 = len(imgs) // 4
             tmp = list(set(self.unlabeled_list) - set(imgs))
             r_imgs = random.Random(self.parameters["seed"]).sample(tmp, k=n_20)
-            imgs = imgs + r_imgs
+            imgs = list(imgs + r_imgs)
 
             self.label_data(
                 imgs,
             )
 
     def find_emb(self, ref_imgs):
-        emb_ind = [self.dataset_paths.index(img_path) for img_path in ref_imgs]
+        emb_ind = [self.dataset_paths.index(img_path.split('/')[-1]) for img_path in ref_imgs]
         embs = [self.embeddings[i] for i in emb_ind]
         return embs
 
@@ -774,16 +777,18 @@ class Pipeline:
 
                 #prob metrics
 
-                #find label for each prediction
-                prob_pos,prob_neg = []
-                i =0
+                # find label for each prediction
+                prob_pos, prob_neg = [], []
+                i = 0
                 for p in predic_prob:
                     if self.class_name in predic_prob_imgs[i]:
-                        prob_pos.append(p[i][0])
+                        prob_pos.append(p)
                     else:
-                        prob_neg.append(p[i][0])
+                        prob_neg.append(p)
+                    i += 1
 
-                count_8, count_5 = 0
+                count_8 = 0
+                count_5 = 0
                 for p in prob_pos:
                     if p >= 0.8:
                         count_8 += 1
@@ -793,7 +798,8 @@ class Pipeline:
                 self.metrics["pos_class_confidence_0.5"].append(count_5)
                 self.metrics["pos_class_confidence_median"].append(np.median(prob_pos))
 
-                count_8, count_5 = 0
+                count_8 = 0
+                count_5 = 0
                 for p in prob_neg:
                     if p >= 0.8:
                         count_8 += 1
