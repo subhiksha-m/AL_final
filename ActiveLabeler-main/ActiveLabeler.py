@@ -65,7 +65,7 @@ class ActiveLabeler:
                 data_index = np.array(data_index)
                 return dataset[data_index]
 
-            selected_samples = get_samples(strategy_params["image_list"], query, N)
+            selected_samples = get_samples(self.images_path, query, N)
             # selected_embeddinds = get_index(selected_samples, self.embeddings)
             return selected_samples
         elif name == "uncertainty":
