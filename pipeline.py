@@ -272,7 +272,8 @@ class Pipeline:
         else:
             batch_size = min(len(list(paths.list_images(unlabled_path))),self.parameters['nn']['swipelabel_batch_size'])
             #tic = time.perf_counter()
-            label = f"python3 AL_final/Swipe-Labeler-main/api/api.py --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog"
+            swipe_dir = os.path.join(self.parameters['nn']['swipe_dir'],'Swipe-Labeler-main/api/api.py')
+            label = f"python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog"
             #todo swipelog
             # >/dev/null 2>&1"
             logging.debug(label)
