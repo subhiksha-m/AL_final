@@ -1,6 +1,6 @@
 encoder:
   encoder_type: SIMCLR
-  encoder_path: /content/SIMCLR_ssl_resnet18_pretrained_full.ckpt
+  encoder_path:  /content/RESISC45-imagenet_resnet18.ckpt
   e_embedding_size: 512
   e_lr: 1e-2
   train_encoder: False
