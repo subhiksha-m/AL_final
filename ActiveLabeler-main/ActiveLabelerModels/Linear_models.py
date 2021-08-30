@@ -34,10 +34,10 @@ class SSLEvaluator(nn.Module):
                     nn.Linear(n_input, n_hidden, bias=True),
                     nn.ReLU(inplace=True),
                     nn.Dropout(p=p),
-                    nn.Linear(n_hidden, n_hidden//2, bias=True),
+                    nn.Linear(n_hidden, n_hidden // 2, bias=True),
                     nn.ReLU(inplace=True),
                     nn.Dropout(p=p),
-                    nn.Linear(n_hidden//2, n_hidden//4, bias=True),
+                    nn.Linear(n_hidden // 2, n_hidden // 4, bias=True),
                     nn.ReLU(inplace=True),
                     nn.Dropout(p=p),
                     nn.Linear(n_hidden // 4, 1, bias=True),
@@ -60,10 +60,10 @@ class SSLEvaluator(nn.Module):
                     nn.Linear(n_input, n_hidden, bias=True),
                     nn.ReLU(inplace=True),
                     nn.Dropout(p=p),
-                    nn.Linear(n_hidden, n_hidden//2, bias=True),
+                    nn.Linear(n_hidden, n_hidden // 2, bias=True),
                     nn.ReLU(inplace=True),
                     nn.Dropout(p=p),
-                    nn.Linear(n_hidden//2, n_hidden//4, bias=True),
+                    nn.Linear(n_hidden // 2, n_hidden // 4, bias=True),
                     nn.ReLU(inplace=True),
                     nn.Dropout(p=p),
                     nn.Linear(n_hidden // 4, n_classes, bias=True),
@@ -77,7 +77,6 @@ class SSLEvaluator(nn.Module):
 
 
 class Flatten(nn.Module):
-
     def __init__(self):
         super(Flatten, self).__init__()
 

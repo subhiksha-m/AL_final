@@ -25,8 +25,19 @@ from imutils import paths
 
 
 class SimilaritySearch:
-    def __init__(self, image_size, data_path, dataset_paths, model, annoy_path, embedding_size, embeddings, device,num_trees,
-                 batch_size):
+    def __init__(
+        self,
+        image_size,
+        data_path,
+        dataset_paths,
+        model,
+        annoy_path,
+        embedding_size,
+        embeddings,
+        device,
+        num_trees,
+        batch_size,
+    ):
         self.image_size = image_size
         self.data_path = data_path
         self.dataset_paths = dataset_paths
@@ -43,7 +54,7 @@ class SimilaritySearch:
         # self.n_closest = n_closest
 
     def get_annoy_tree(self):
-        t = AnnoyIndex(self.num_nodes, 'euclidean')
+        t = AnnoyIndex(self.num_nodes, "euclidean")
         for i in range(len(self.embeddings)):
             t.add_item(i, self.embeddings[i])
         t.build(self.num_trees)
@@ -51,7 +62,7 @@ class SimilaritySearch:
         print("Annoy file stored at ", self.annoy_path)
 
     def inference(self, image_path):
-        im = Image.open(image_path).convert('RGB')
+        im = Image.open(image_path).convert("RGB")
         image = np.transpose(im, (2, 0, 1)).copy()
         im = torch.tensor(image).unsqueeze(0).float().cuda()
         x = self.model(im)
@@ -59,7 +70,7 @@ class SimilaritySearch:
 
     def get_nn_annoy(self, image_path, n_closest, disp=False):
         # load dependencies
-        u = AnnoyIndex(self.num_nodes, 'euclidean')
+        u = AnnoyIndex(self.num_nodes, "euclidean")
         u.load(self.annoy_path)
 
         # get image embedding
@@ -67,7 +78,9 @@ class SimilaritySearch:
 
         dataset_paths = list(paths.list_images(self.data_path))
 
-        inds, dists = u.get_nns_by_vector(image_embedding, n_closest, include_distances=True)
+        inds, dists = u.get_nns_by_vector(
+            image_embedding, n_closest, include_distances=True
+        )
 
         if disp:
             for i in range(len(inds)):

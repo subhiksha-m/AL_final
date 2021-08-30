@@ -3,11 +3,12 @@ import torch
 
 class ClassifierModel(torch.nn.Module):
     """Doc string"""
+
     def __init__(self, device, encoder, linear_model):
         """
-        Loads the encoder and the linear_model to gpu or cpu 
+        Loads the encoder and the linear_model to gpu or cpu
         depending on the device.
-        
+
         Keyword arguments
         device -- Hardware used for running the pipeline. cuda or cpu
         encoder -- Loaded encoder from the SSL repo

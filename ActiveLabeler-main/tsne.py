@@ -11,12 +11,14 @@ import time
 from pathlib import Path
 import sys
 from torchvision import transforms
+
 sys.path.insert(0, "Self-Supervised-Learner")
 sys.path.insert(0, "ActiveLabelerModels")
 sys.path.insert(0, "ActiveLabeler-main")
 from models import CLASSIFIER
 from models import SIMCLR
-#from finetuner_dali_distrib import finetuner
+
+# from finetuner_dali_distrib import finetuner
 import torch
 from torch.utils.data import DataLoader
 from sklearn.metrics import classification_report, f1_score, recall_score
@@ -117,18 +119,20 @@ class TSNE_visualiser:
         verbose = 1
         perplexity = perplexity
         n_iter = 1000
-        metric = 'euclidean'
+        metric = "euclidean"
         n_jobs = n_jobs
 
         time_start = time.time()
-        tsne_results = TSNE(n_components=n_components,
-                            verbose=verbose,
-                            perplexity=perplexity,
-                            n_iter=n_iter,
-                            n_jobs=n_jobs,
-                            metric=metric).fit_transform(self.feature_list)
+        tsne_results = TSNE(
+            n_components=n_components,
+            verbose=verbose,
+            perplexity=perplexity,
+            n_iter=n_iter,
+            n_jobs=n_jobs,
+            metric=metric,
+        ).fit_transform(self.feature_list)
 
-        print('t-SNE done! Time elapsed: {} seconds'.format(time.time() - time_start))
+        print("t-SNE done! Time elapsed: {} seconds".format(time.time() - time_start))
         return tsne_results
 
     def scatter_plot(self, tsne_results):
@@ -137,15 +141,17 @@ class TSNE_visualiser:
         # '''
         # le = LabelEncoder()
         # class_labels = le.fit_transform(labels)
-        color_map = plt.cm.get_cmap('tab20b_r')
-        scatter_plot = plt.scatter(tsne_results[:, 0],
-                                   tsne_results[:, 1],
-                                   # c=class_labels,
-                                   cmap=color_map)
+        color_map = plt.cm.get_cmap("tab20b_r")
+        scatter_plot = plt.scatter(
+            tsne_results[:, 0],
+            tsne_results[:, 1],
+            # c=class_labels,
+            cmap=color_map,
+        )
 
         plt.colorbar(scatter_plot)
-        plt.title('TSNE of Embeddings');
-        fname = './TSNE_Scatter.png'
+        plt.title("TSNE of Embeddings")
+        fname = "./TSNE_Scatter.png"
         plt.savefig(fname)
 
     def plot_images_in_2d(self, x, y, image_vectors, axis=None, zoom=1):
@@ -162,9 +168,7 @@ class TSNE_visualiser:
             image = Image.open(image_path)
             image.thumbnail((100, 100), Image.ANTIALIAS)
             img = OffsetImage(image, zoom=zoom)
-            anno_box = AnnotationBbox(img, (x0, y0),
-                                      xycoords='data',
-                                      frameon=False)
+            anno_box = AnnotationBbox(img, (x0, y0), xycoords="data", frameon=False)
             axis.add_artist(anno_box)
         axis.update_datalim(np.column_stack([x, y]))
         axis.autoscale()
@@ -174,7 +178,7 @@ class TSNE_visualiser:
         fig, axis = plt.subplots()
         fig.set_size_inches(22, 22, forward=True)
         self.plot_images_in_2d(x, y, images, zoom=0.3, axis=axis)
-        fname = f'./TSNE_regplot.png'
+        fname = f"./TSNE_regplot.png"
         plt.savefig(fname)
 
     def tsne_to_grid_plotter_manual(self, x, y, selected_filenames):
@@ -205,12 +209,12 @@ class TSNE_visualiser:
             filename_plot.append(image_path)
         fig, axis = plt.subplots()
         fig.set_size_inches(22, 22, forward=True)
-        self.plot_images_in_2d(x_values, y_values, filename_plot, zoom=.58, axis=axis)
-        fname = './TSNE_GridPlot.png'
+        self.plot_images_in_2d(x_values, y_values, filename_plot, zoom=0.58, axis=axis)
+        fname = "./TSNE_GridPlot.png"
         plt.savefig(fname)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--DATA_PATH", type=str, help="path to folders with images")
     parser.add_argument("--MODEL_PATH", type=str, help="path to ssl model")
