@@ -198,6 +198,7 @@ class Pipeline:
         for image_path in ref_imgs:
             inds, dists = self.get_nn_annoy(
                 image_path,
+                image_path,
                 n_closest,
                 model,
                 embs[i]
@@ -439,20 +440,21 @@ class Pipeline:
             parameters["data"]["data_path"],
         )
 
+        tmp = list(paths.list_images(parameters["data"]["data_path"]))
+        self.unlabeled_list = [i.split("/")[-1] for i in tmp]
+        self.dataset_paths = self.unlabeled_list
+
         logging.info("initialize_embeddings")
         self.initialize_embeddings(
             parameters["model"]["image_size"],
             parameters["model"]["embedding_size"],
             model,
-            list(paths.list_images(parameters["data"]["data_path"])),
+            self.dataset_paths,
             parameters["annoy"]["num_nodes"],
             parameters["annoy"]["num_trees"],
             parameters["annoy"]["annoy_path"],
         )
 
-        tmp = list(paths.list_images(parameters["data"]["data_path"]))
-        self.unlabeled_list = [i.split("/")[-1] for i in tmp]
-        self.dataset_paths = self.unlabeled_list
 
         #todo continuation
         if parameters["seed_dataset"]["nn"] == 1:
@@ -470,7 +472,8 @@ class Pipeline:
                     paths.list_images(parameters["seed_dataset"]["seed_data_path"])
                 )
             ]
-            self.unlabeled_list.remove(i for i in self.labled_list)
+            for i in self.labled_list:
+                self.unlabeled_list.remove(i)
             newly_labled_path = parameters["seed_dataset"]["seed_data_path"] #todo: put seed inside labeled path ?
 
         # +++++++++++++++++++++++++++++++++++++++++++++++++++++
