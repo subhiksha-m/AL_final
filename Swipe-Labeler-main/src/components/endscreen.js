@@ -14,7 +14,14 @@ class EndScreen extends React.Component {
     //bind functions
     this.decideContinue = this.decideContinue.bind(this);
   }
-  sendEnd() {
+
+  sendClose() {
+    console.log("sendClose!!!!@!!!");
+    window.open("", "_parent", "");
+    window.close();
+  }
+
+  sendShutDown() {
     // When the user clicks end,
     // that choice gets sent to flask.
     fetch("/end", {
@@ -24,6 +31,14 @@ class EndScreen extends React.Component {
         ready_to_end: "ready",
       }),
     });
+  }
+
+  detectTouch() {
+    return (
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      navigator.msMaxTouchPoints > 0
+    );
   }
 
   getSwipeTime() {
@@ -42,6 +57,7 @@ class EndScreen extends React.Component {
       obj = (
         <Button
           icon="label"
+          id="end-btn"
           className="EndScreenButton"
           intent="primary"
           text={true}
@@ -54,8 +70,61 @@ class EndScreen extends React.Component {
     return obj;
   }
 
+  decideWarning() {
+    let warning;
+    if (this.detectTouch())
+      warning = (
+        <>
+          <div className="end-btn1">
+            <Button
+              id="end-btn"
+              icon="stop"
+              className="EndScreenButton"
+              intent="danger"
+              onClick={this.sendShutDown}
+            >
+              Shut down App
+            </Button>
+          </div>
+          <div
+            style={{
+              display: "block",
+              backgroundColor: "antiquewhite",
+              fontSize: "1rem",
+            }}
+          >
+            {" "}
+            Warning: If other people are using the App, ShutDown ends it for
+            them too!
+          </div>
+        </>
+      );
+    else
+      warning = (
+        <>
+          <div className="end-btn1">
+            <Button
+              id="end-btn"
+              icon="stop"
+              className="EndScreenButton"
+              intent="danger"
+              onClick={this.sendShutDown}
+            >
+              Shut down App
+            </Button>
+          </div>
+          <div className="hover-text">
+            Warning: If other people are using the App, this ends it for them
+            too!
+          </div>
+        </>
+      );
+    return warning;
+  }
   render() {
+    this.props.setTutorialSeen();
     let obj = this.decideContinue();
+    let warning = this.decideWarning();
     return (
       <>
         <Confetti />
@@ -71,14 +140,17 @@ class EndScreen extends React.Component {
           </div>
           <div className="endscreen-btn-grp">
             {obj}
-            <Button
-              icon="stop"
+
+            {/* <Button
+              id="end-btn"
+              icon="small-cross"
               className="EndScreenButton"
-              intent="danger"
-              onClick={this.sendEnd}
+              intent="success"
+              onClick={this.sendClose}
             >
-              Close
-            </Button>
+              Close App
+            </Button> */}
+            {warning}
           </div>
         </div>
       </>

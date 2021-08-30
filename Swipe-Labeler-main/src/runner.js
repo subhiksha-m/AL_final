@@ -4,6 +4,7 @@ import { Button } from "@blueprintjs/core";
 import { SwipeScreen } from "./components/swipescreen";
 import { TutorialScreen } from "./components/tutorialscreen";
 import { EndScreen } from "./components/endscreen";
+import { Welcome } from "./components/welcomescreen";
 import "normalize.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
@@ -17,6 +18,7 @@ function hasSeenTutorial() {
 }
 
 function setTutorialSeen() {
+  console.log("tutorial will be set to seen!");
   document.cookie = "hasSeenTutorial=true";
 }
 
@@ -25,7 +27,8 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: hasSeenTutorial() ? "active" : "tutorial",
+      view: hasSeenTutorial() ? "active" : "welcome",
+      // view: "welcome",
       index: 0,
       image: null,
       total_batch_size: null,
@@ -38,6 +41,8 @@ export default class App extends React.Component {
       batchStop: 0,
       leftBehind: 0,
       labeledSize: 0,
+      progWidth: 0,
+      displayProg: "prog-bar",
     };
 
     // bind functions
@@ -49,8 +54,11 @@ export default class App extends React.Component {
     this.onBackClick = this.onBackClick.bind(this);
     this.onQuitClick = this.onQuitClick.bind(this);
     this.endTutorial = this.endTutorial.bind(this);
+    this.startTutorial = this.startTutorial.bind(this);
+    this.startLabel = this.startLabel.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.getBatchSize = this.getBatchSize.bind(this);
+    this.decideProgWidth = this.decideProgWidth.bind(this);
   }
 
   componentDidMount() {
@@ -205,6 +213,36 @@ export default class App extends React.Component {
     });
   }
 
+  decideProgWidth() {
+    if (this.state.batchStop > this.state.total_batch_size) {
+      console.log("reached block");
+      this.setState({
+        displayProg: "prog-bar",
+        msg: "reached!",
+      });
+      this.setState(
+        {
+          progWidth: this.state.noOfSwipes / (this.state.batch_size + 1),
+          msg: " reach",
+        },
+        () => {
+          console.log(this.state.msg);
+        }
+      );
+    } else {
+      let x = this.state.batchStop;
+      this.setState(
+        {
+          progWidth: this.state.noOfSwipes / this.state.batchStop,
+          msg: "didnt reach",
+        },
+        () => {
+          console.log(this.state.msg);
+        }
+      );
+    }
+  }
+
   onAcceptClick() {
     // Send the positive label to flask, make call to /image to get the next image from flask
     // and update the index so the next image will show.
@@ -218,6 +256,7 @@ export default class App extends React.Component {
       },
       () => {
         this.sendSelection(1);
+        this.decideProgWidth();
         if (this.state.noOfSwipes === this.state.batchStop)
           this.setState({
             view: "end",
@@ -240,6 +279,7 @@ export default class App extends React.Component {
       },
       () => {
         this.sendSelection(2);
+        this.decideProgWidth();
         if (this.state.noOfSwipes === this.state.batchStop)
           this.setState({
             view: "end",
@@ -262,6 +302,7 @@ export default class App extends React.Component {
       },
       () => {
         this.sendSelection(0);
+        this.decideProgWidth();
         if (this.state.noOfSwipes === this.state.batchStop)
           this.setState({
             view: "end",
@@ -283,16 +324,21 @@ export default class App extends React.Component {
       })
       .then((res) => {
         console.log(res);
-        this.setState({
-          index: this.state.index + 1,
-          image: this.state.imgUrls[this.state.index - 1],
-          imgUrls: x,
-          undoUrls: y,
-          noOfSwipes: this.state.noOfSwipes - 1,
-          leftBehind: this.state.leftBehind + 1,
-          undoHappened: true,
-          imagesLeft: this.state.imagesLeft + 1,
-        });
+        this.setState(
+          {
+            index: this.state.index + 1,
+            image: this.state.imgUrls[this.state.index - 1],
+            imgUrls: x,
+            undoUrls: y,
+            noOfSwipes: this.state.noOfSwipes - 1,
+            leftBehind: this.state.leftBehind + 1,
+            undoHappened: true,
+            imagesLeft: this.state.imagesLeft + 1,
+          },
+          () => {
+            this.decideProgWidth();
+          }
+        );
       })
       .catch((err) => console.log("ERROR: ", err));
   }
@@ -323,6 +369,19 @@ export default class App extends React.Component {
       .catch((err) => console.log("ERROR: ", err));
   }
 
+  startTutorial() {
+    console.log("hello world from start");
+    this.setState({
+      view: "tutorial",
+    });
+  }
+
+  startLabel() {
+    this.setState({
+      view: "active",
+    });
+  }
+
   endTutorial() {
     this.setState({
       view: "active",
@@ -334,10 +393,28 @@ export default class App extends React.Component {
   render() {
     var body = null;
     {
-      console.log("Parent Props\n", this.state.images);
+      console.log("Parent state\n", this.state.images);
     }
+    let toContinue;
+    if (this.state.batch_size <= 0) toContinue = false;
+    else toContinue = true;
 
-    if (this.state.view === "tutorial")
+    let displayProg;
+    if (this.state.batchStop > this.state.total_batch_size) {
+      console.log("reached if block!");
+      displayProg = "prg-bar";
+      // displayProg = "prog-bar";
+    } else {
+      displayProg = "prog-bar";
+    }
+    if (this.state.view === "welcome")
+      body = (
+        <Welcome
+          startTutorial={this.startTutorial}
+          startLabel={this.startLabel}
+        />
+      );
+    else if (this.state.view === "tutorial")
       body = <TutorialScreen end={this.endTutorial} />;
     else if (this.state.view === "active")
       body = this.state.image ? (
@@ -358,13 +435,20 @@ export default class App extends React.Component {
           batchStop={this.state.batchStop}
           noOfSwipes={this.state.noOfSwipes}
           imagesLeft={this.state.imagesLeft}
+          progWidth={this.state.progWidth}
+          displayProg={displayProg}
         />
       ) : (
         <Button loading={true} />
       );
     else if (this.state.view === "end") {
-      if (this.state.batch_size <= 0) body = <EndScreen />;
-      else body = <EndScreen continue={true} />;
+      // body = <EndScreen continue={toContinue} />;
+      if (this.state.batch_size - 1 <= 0)
+        body = <EndScreen setTutorialSeen={setTutorialSeen} />;
+      else
+        body = (
+          <EndScreen continue={toContinue} setTutorialSeen={setTutorialSeen} />
+        );
     }
     return <div className="App">{body}</div>;
   }

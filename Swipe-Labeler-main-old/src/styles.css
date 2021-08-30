@@ -1,0 +1,174 @@
+html > body {
+  font-family: "Cairo", sans-serif;
+}
+
+html,
+#root,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+}
+
+.App {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  text-align: center;
+}
+
+.Content {
+}
+
+.Image_wrapper {
+  width: fit-content;
+  margin: auto;
+}
+
+.count {
+  display: flex;
+  color: #332488;
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 20px;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  /* transform: translateX(-3.5%); */
+  /* border: 2px solid red; */
+}
+.ct-grp {
+  width: fit-content;
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+.count span {
+  margin: 2.55px;
+  display: inline-block;
+  padding: 2.5px;
+}
+
+.prog-bar {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.timer {
+  width: fit-content;
+  padding: 3px;
+  box-sizing: border-box;
+  border: solid 2px black;
+  border-radius: 5px;
+}
+
+.button-grp {
+  display: grid;
+}
+
+.quit-button {
+  margin: 3px auto;
+  width: fit-content;
+
+  box-sizing: border-box;
+}
+
+#share-button {
+  margin: 3px auto;
+}
+
+img {
+  max-width: 50vw;
+  max-height: 60vh;
+}
+
+.image {
+  position: relative;
+  background-color: #fff;
+  width: 80vw;
+  max-width: 260px;
+  height: 300px;
+  box-shadow: 0px 0px 60px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+}
+.footer {
+  margin-top: 5px;
+}
+
+@media (max-width: 640px) {
+  img {
+    max-width: 90vw;
+  }
+  .image {
+    max-width: 90vw;
+  }
+  .Content {
+    flex: 1;
+    margin: 0 auto;
+  }
+  .footer {
+    margin-top: 10vh;
+  }
+}
+
+.AcceptRejectButton {
+  margin: 20px;
+}
+
+.EndScreenButton {
+  margin: 8px auto;
+}
+
+.endscreen-btn-grp {
+  margin: 8px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.TutorialScreen_Question_Image {
+  height: 500px;
+  background-size: cover;
+}
+
+.TutorialScreen_Question_Image_Text {
+  padding: 300px 15% 0 15%;
+  color: white;
+  text-shadow: 1px 1px 10px black;
+}
+
+.EndScreen {
+  height: 100%;
+  background-size: cover;
+}
+#blank {
+  display: none;
+}
+.EndScreen_Text {
+  padding-top: 50px;
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
+}
+
+.EndScreen_Time_Text {
+  padding-top: 50px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
+}
+
+.TutorialScreen_Question_Image_Text_Title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.TutorialScreen_Question_Image_Text_Caption {
+  font-size: 1.3rem;
+}
