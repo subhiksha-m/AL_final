@@ -540,7 +540,7 @@ class Pipeline:
             if input_counter == "q":
                 break
 
-            elif input_counter == "l":
+            if input_counter == "l":
                 # train linear = create dataloader on (newly labled + archive dataset) & split into training plus validation, train
 
                 #create newly labeled images emb mapping
@@ -681,7 +681,7 @@ class Pipeline:
                     ],
                 )
 
-            else:
+            if input_counter != "f" and input_counter != "l":
                 continue
 
             # AL.getimgstolabel => uncertain imgs => nn sampling_strategy
