@@ -61,10 +61,6 @@ from pyngrok import ngrok
 import logging
 logging.info("APP START")
 
-swipe_url = ngrok.connect(5000)
-print("\n access swipe labeler at: ", swipe_url)
-
-
 sys.path.insert(0, "Self-Supervised-Learner")
 sys.path.insert(0, "./ActiveLabeler-main")
 sys.path.insert(0, "./ActiveLabeler-main/Self-Supervised-Learner")
@@ -250,7 +246,7 @@ class Pipeline:
 
         logging.info("Calling swipe labeler")
         print(
-            f"\n {len(list(paths.list_images(unlabled_path)))} images to label. Go to {swipe_url}"
+            f"\n {len(list(paths.list_images(unlabled_path)))} images to label."
         )
 
         ori_labled = len(list(paths.list_images(labeled_path)))
@@ -271,15 +267,15 @@ class Pipeline:
         #swipe labeler
         else:
             batch_size = min(len(list(paths.list_images(unlabled_path))),self.parameters['nn']['swipelabel_batch_size'])
-            #tic = time.perf_counter()
             swipe_dir = os.path.join(self.parameters['nn']['swipe_dir'],'Swipe-Labeler-main/api/api.py')
-            label = f"python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog"
-            #todo swipelog
+            label = f"nohup python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog.txt &"
+            #todo swipelog merge to main log
             # >/dev/null 2>&1"
             logging.debug(label)
             os.system(label)
-            #toc = time.perf_counter()
-            #self.human_time += toc - tic  # seconds
+            get_ipython().getoutput('lt --port 5000')
+
+
 
         print(
             f" {len(list(paths.list_images(labeled_path))) - ori_labled} labeled: {len(list(paths.list_images(positive_path))) - ori_pos} Pos {len(list(paths.list_images(negative_path))) - ori_neg} Neg"
