@@ -1,3 +1,8 @@
+import sys
+sys.path.insert(0, "./AL_final")
+sys.path.insert(0, "./AL_final/ActiveLabeler-main")
+sys.path.insert(0, "./AL_final/ActiveLabeler-main/Self-Supervised-Learner")
+sys.path.insert(0, "./AL_final/ActiveLabeler-main/ActiveLabelerModels")
 import logging
 import os.path
 
@@ -8,11 +13,6 @@ import pathlib
 import numpy as np
 from argparse import ArgumentParser
 from pipeline import Pipeline
-import sys
-sys.path.insert(0, "./AL_final")
-sys.path.insert(0, "./AL_final/ActiveLabeler-main")
-sys.path.insert(0, "./AL_final/ActiveLabeler-main/Self-Supervised-Learner")
-sys.path.insert(0, "./AL_final/ActiveLabeler-main/ActiveLabelerModels")
 
 #TODO need to incorporate setting up dataset like dummy dataset, etc. that is there on colab here
 
@@ -29,7 +29,7 @@ def main():
 
     #set seed
     random.seed(config["seed"])
-    np.random.seed(seed)
+    np.random.seed(config["seed"])
 
 
     #log settings
@@ -57,7 +57,7 @@ def main():
                os.path.join(config["AL_main"]["al_folder"],"positive"),os.path.join(config["AL_main"]["al_folder"],"negative"),
                os.path.join(config["AL_main"]["newly_labled_path"], "positive"),
                os.path.join(config["AL_main"]["newly_labled_path"], "negative"),
-               config["annoy"]["annoy_path"]]:
+               '/'.join(config["annoy"]["annoy_path"].split('/')[:-2]) ]:
         pathlib.Path(i).mkdir(parents=True, exist_ok=True)
 
     # initialize pipeline object
