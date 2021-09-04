@@ -36,7 +36,7 @@ annoy:
 
 TrainModels:
   dummy_dataset:    /content/dummy #TODO
-  config_path:      /content/AL_final/ActiveLabeler-main/ActiveLabelerModels/model_config.yaml
+  config_path:      /content/model_config.yaml
 
 ActiveLabeler:
   sample_size:      20
