@@ -13,6 +13,8 @@ import pathlib
 import numpy as np
 from argparse import ArgumentParser
 from pipeline import Pipeline
+import shutil
+
 
 #TODO need to incorporate setting up dataset like dummy dataset, etc. that is there on colab here
 
@@ -52,13 +54,19 @@ def main():
         )
 
     #directories
-
     for i in [ config["nn"]["unlabled_path"],config["nn"]["labeled_path"],config["nn"]["positive_path"],config["nn"]["negative_path"],config["nn"]["unsure_path"],config["AL_main"]["al_folder"],
                os.path.join(config["AL_main"]["al_folder"],"positive"),os.path.join(config["AL_main"]["al_folder"],"negative"),
                os.path.join(config["AL_main"]["newly_labled_path"], "positive"),
                os.path.join(config["AL_main"]["newly_labled_path"], "negative"),
-               '/'.join(config["annoy"]["annoy_path"].split('/')[:-2]) ]:
-        pathlib.Path(i).mkdir(parents=True, exist_ok=True)
+               '/'.join(config["annoy"]["annoy_path"].split('/')[:-1]) ]:
+      if os.path.exists(i):
+        shutil.rmtree(i)
+    for i in [ config["nn"]["unlabled_path"],config["nn"]["labeled_path"],config["nn"]["positive_path"],config["nn"]["negative_path"],config["nn"]["unsure_path"],config["AL_main"]["al_folder"],
+               os.path.join(config["AL_main"]["al_folder"],"positive"),os.path.join(config["AL_main"]["al_folder"],"negative"),
+               os.path.join(config["AL_main"]["newly_labled_path"], "positive"),
+               os.path.join(config["AL_main"]["newly_labled_path"], "negative"),
+               '/'.join(config["annoy"]["annoy_path"].split('/')[:-1]) ]:
+      pathlib.Path(i).mkdir(parents=True, exist_ok=True)
 
     # initialize pipeline object
     pipeline = Pipeline(config_path=config_path, class_name=class_name)
