@@ -71,7 +71,7 @@ class TrainModels:
         self.weight_decay = float(self.parameters["classifier"]["c_weight_decay"])
         self.final_lr = float(self.parameters["classifier"]["c_final_lr"])
         self.momentum = float(self.parameters["classifier"]["c_momentum"])
-        self.weights = self.parameters["classifier"]["c_weights"]
+        self.weights = None
         # Training
         self.epochs = self.parameters["training"]["epochs"]
         self.optimizer = None
