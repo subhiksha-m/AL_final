@@ -1,8 +1,11 @@
 import logging
+import os.path
+
 import yaml
 import random
 from argparse import ArgumentParser
 import pathlib
+import numpy as np
 from argparse import ArgumentParser
 from pipeline import Pipeline
 import sys
@@ -15,7 +18,8 @@ sys.path.insert(0, "./AL_final/ActiveLabeler-main/ActiveLabelerModels")
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument("--config_path,--class_name", type=str, help="Path to config file")
+    parser.add_argument("--config_path", type=str, help="Path to config file")
+    parser.add_argument("--class_name", type=str, help="Positive class name")
     args = parser.parse_args()
     config_path = args.config_path
     class_name = args.class_name
@@ -25,6 +29,8 @@ def main():
 
     #set seed
     random.seed(config["seed"])
+    np.random.seed(seed)
+
 
     #log settings
     if config["verbose"] ==0:
@@ -45,13 +51,24 @@ def main():
             ]
         )
 
+    #directories
+
+    for i in [ config["nn"]["unlabled_path"],config["nn"]["labeled_path"],config["nn"]["positive_path"],config["nn"]["negative_path"],config["nn"]["unsure_path"],config["AL_main"]["al_folder"],
+               os.path.join(config["AL_main"]["al_folder"],"positive"),os.path.join(config["AL_main"]["al_folder"],"negative"),
+               os.path.join(config["AL_main"]["newly_labled_path"], "positive"),
+               os.path.join(config["AL_main"]["newly_labled_path"], "negative"),
+               config["annoy"]["annoy_path"]]:
+        pathlib.Path(i).mkdir(parents=True, exist_ok=True)
+
     # initialize pipeline object
     pipeline = Pipeline(config_path=config_path, class_name=class_name)
+    pipeline.main()
 
 if __name__ == '__main__':
     main()
 
 
+ #todo folders need to be created if not created , and if not specified have defaults
 
 
 
