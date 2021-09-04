@@ -55,16 +55,14 @@ from torchvision import transforms
 import matplotlib.image as mpimg
 from imutils import paths
 import sys
-from tsne import TSNE_visualiser
-from pyngrok import ngrok
 
 import logging
 logging.info("APP START")
 
-sys.path.insert(0, "Self-Supervised-Learner")
-sys.path.insert(0, "./ActiveLabeler-main")
-sys.path.insert(0, "./ActiveLabeler-main/Self-Supervised-Learner")
-sys.path.insert(0, "./ActiveLabeler-main/ActiveLabelerModels")
+# sys.path.insert(0, "Self-Supervised-Learner")
+# sys.path.insert(0, "./ActiveLabeler-main")
+# sys.path.insert(0, "./ActiveLabeler-main/Self-Supervised-Learner")
+# sys.path.insert(0, "./ActiveLabeler-main/ActiveLabelerModels")
 
 from models import CLASSIFIER
 from models import SIMCLR
@@ -274,6 +272,7 @@ class Pipeline:
             logging.debug(label)
             os.system(label)
             get_ipython().getoutput('lt --port 5000')
+            #os.system('lt --port 5000')
 
 
 
