@@ -271,8 +271,10 @@ class Pipeline:
             # >/dev/null 2>&1"
             logging.debug(label)
             os.system(label)
-            get_ipython().getoutput('lt --port 5000')
-            #os.system('lt --port 5000')
+            if self.parameters['colab']:
+                get_ipython().getoutput('lt --port 5000')
+            else:
+                os.system('lt --port 5000')
 
 
 
