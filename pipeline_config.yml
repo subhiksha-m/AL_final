@@ -4,7 +4,7 @@ model:
   image_size:       256
   embedding_size:   512
 
-
+colab = 1
 verbose: 1
 seed: 100
 
@@ -36,7 +36,7 @@ annoy:
 
 TrainModels:
   dummy_dataset:    /content/dummy #TODO
-  config_path:      /content/model_config.yaml
+  config_path:     /content/AL_final/model_config.yaml
 
 ActiveLabeler:
   sample_size:      20
@@ -52,7 +52,7 @@ AL_main:
   train_dataset_batch_size : 32
 
 seed_dataset:
- nn: 0 #put ref img here
+ nn: 1 #put ref img here
  seed_data_path: /content/seed_dataset
 
 
