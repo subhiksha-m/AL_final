@@ -266,16 +266,22 @@ class Pipeline:
         else:
             batch_size = min(len(list(paths.list_images(unlabled_path))),self.parameters['nn']['swipelabel_batch_size'])
             swipe_dir = os.path.join(self.parameters['nn']['swipe_dir'],'Swipe-Labeler-main/api/api.py')
-            label = f"nohup python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog.txt &"
-            #todo swipelog merge to main log
-            # >/dev/null 2>&1"
+            label = f"python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog.txt"
             logging.debug(label)
             ossys = os.system(label)
             print("swipe labeler exit code", ossys)
-            if self.parameters['colab']:
-                get_ipython().getoutput('lt --port 5000')
-            else:
-                os.system('lt --port 5000')
+            
+
+            # label = f"nohup python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog.txt &"
+            # #todo swipelog merge to main log
+            # # >/dev/null 2>&1"
+            # logging.debug(label)
+            # ossys = os.system(label)
+            # print("swipe labeler exit code", ossys)
+            # if self.parameters['colab']:
+            #     get_ipython().getoutput('lt --port 5000')
+            # else:
+            #     os.system('lt --port 5000')
 
 
 
