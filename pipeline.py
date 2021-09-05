@@ -270,7 +270,8 @@ class Pipeline:
             #todo swipelog merge to main log
             # >/dev/null 2>&1"
             logging.debug(label)
-            os.system(label)
+            ossys = os.system(label)
+            print("swipe labeler exit code", ossys)
             if self.parameters['colab']:
                 get_ipython().getoutput('lt --port 5000')
             else:
