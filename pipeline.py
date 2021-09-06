@@ -136,7 +136,7 @@ class Pipeline:
         emb
     ):
         # load dependencies
-        u = AnnoyIndex(self.parameters["annoy"]["num_nodes"], "euclidean")
+        u = AnnoyIndex(self.parameters["model"]["embedding_size"], "euclidean")
         u.load(self.parameters["annoy"]["annoy_path"])
 
         # if emb not passed use inference function and model to generate emb
@@ -269,8 +269,8 @@ class Pipeline:
             label = f"python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog.txt"
             logging.debug(label)
             ossys = os.system(label)
-            print("swipe labeler exit code", ossys)
-            
+            logging.debug(f"swipe labeler exit code {ossys}")
+
 
             # label = f"nohup python3 {swipe_dir} --path_for_unlabeled='{unlabled_path}' --path_for_pos_labels='{positive_path}' --path_for_neg_labels='{negative_path}' --path_for_unsure_labels='{unsure_path}' --batch_size={batch_size} > swipelog.txt &"
             # #todo swipelog merge to main log
@@ -458,7 +458,7 @@ class Pipeline:
             parameters["model"]["embedding_size"],
             model,
             self.dataset_paths,
-            parameters["annoy"]["num_nodes"],
+            parameters["model"]["embedding_size"],
             parameters["annoy"]["num_trees"],
             parameters["annoy"]["annoy_path"],
         )
@@ -508,7 +508,7 @@ class Pipeline:
         train_models = TrainModels(
             parameters["TrainModels"]["config_path"],
             "./", #todo check if this is right or put in config file
-            parameters["TrainModels"]["dummy_dataset"],
+            parameters["data"]["data_path"],
             "AL",
         )  # todo saved model path # datapath => sub directory structure for datapath arg
 
@@ -673,7 +673,7 @@ class Pipeline:
                     parameters["model"]["embedding_size"],
                     encoder,
                     self.dataset_paths,
-                    parameters["annoy"]["num_nodes"],
+                    parameters["model"]["embedding_size"],
                     parameters["annoy"]["num_trees"],
                     parameters["annoy"]["annoy_path"],
                     "encoder",
