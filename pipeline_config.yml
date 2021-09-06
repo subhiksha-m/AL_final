@@ -4,7 +4,6 @@ model:
   image_size:       256
   embedding_size:   512
 
-#colab : 1
 verbose: 1
 seed: 100
 
