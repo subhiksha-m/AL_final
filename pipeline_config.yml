@@ -4,7 +4,7 @@ model:
   image_size:       256
   embedding_size:   512
 
-colab : 1
+#colab : 1
 verbose: 1
 seed: 100
 
@@ -30,12 +30,10 @@ nn:
   swipe_dir: /content/AL_final
 
 annoy:
-    num_nodes:      512 #TODO
     num_trees:      50
     annoy_path:     /content/runtime/NN_local/annoy_file.ann
 
 TrainModels:
-  dummy_dataset:    /content/dummy #TODO
   config_path:     /content/AL_final/model_config.yaml
 
 ActiveLabeler:
